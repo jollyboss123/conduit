@@ -1,15 +1,15 @@
-.PHONY: order-up order-down order-build order-restart order-prune
+.PHONY: up down build logs restart prune
 
-order-up:
-	docker-compose -f order-service/docker-compose.yaml up -d
+up:
+	docker-compose up -d
 
-order-down:
-	docker-compose -f order-service/docker-compose.yaml down
+down:
+	docker-compose down
 
-order-build:
-	docker-compose -f order-service/docker-compose.yaml build
+build:
+	docker-compose build
 
-order-restart: order-down order-up
+restart: down up
 
-order-prune:
-	docker-compose -f order-service/docker-compose.yaml down -v --remove-orphans
+prune:
+	docker-compose down -v --remove-orphans

@@ -14,12 +14,13 @@ services:
       - POSTGRES_PASSWORD=postgrespw
       - POSTGRES_DB=orderdb
       - PGPASSWORD=postgrespw
+    command: ['postgres', '-c', 'wal_level=logical']
     volumes:
       - order-db-data:/var/lib/postgresql/data
 
   order-service:
     build:
-      context: .
+      context: order-service
       dockerfile: Dockerfile
     container_name: order-service
     ports:
