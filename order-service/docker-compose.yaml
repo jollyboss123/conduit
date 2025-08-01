@@ -1,0 +1,38 @@
+services:
+  order-db:
+    image: postgres:16
+    container_name: order-db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: "pg_isready -U postgresuser -d orderdb"
+      interval: 2s
+      timeout: 20s
+      retries: 10
+    environment:
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_DB=orderdb
+      - PGPASSWORD=postgrespw
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "8080:8080"
+    links:
+      - order-db
+    depends_on:
+      order-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-db:5432/orderdb
+      SPRING_DATASOURCE_USERNAME: postgresuser
+      SPRING_DATASOURCE_PASSWORD: postgrespw
+
+volumes:
+  order-db-data:
