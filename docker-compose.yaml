@@ -164,5 +164,23 @@ services:
       SPRING_DATASOURCE_USERNAME: postgresuser
       SPRING_DATASOURCE_PASSWORD: postgrespw
 
+  kafka-streams-app:
+    build:
+      context: kafka-streams
+      dockerfile: Dockerfile
+    container_name: kafka-streams-app
+    depends_on:
+      broker:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: outbox
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker:29092
+      KAFKA_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SPRING_KAFKA_STREAMS_REPLICATION_FACTOR: 1
+    ports:
+      - '8090:8080'
+
 volumes:
   order-db-data:

@@ -1,0 +1,48 @@
+{
+  "type": "record",
+  "name": "NormalizedOutbox",
+  "namespace": "com.jolly.kafka_streams.avro",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "aggregateType",
+      "type": "string"
+    },
+    {
+      "name": "aggregateId",
+      "type": "string"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "customerId",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "payload",
+      "type": "string",
+      "doc": "Serialized JSON content"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    }
+  ]
+}

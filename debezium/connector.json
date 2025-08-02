@@ -32,6 +32,15 @@
     "transforms.extractId.field": "id",
 
     "transforms.castByte.type": "org.apache.kafka.connect.transforms.Cast$Value",
-    "transforms.castByte.spec": "id:string"
+    "transforms.castByte.spec": "id:string",
+
+    "key.converter.schemas.enable": "false",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.auto.register.schemas": "false",
+    "value.converter.use.latest.version": "false",
+    "value.converter.schemas.enable": "false",
+    "value.converter.connect.meta.data": "false"
   }
 }

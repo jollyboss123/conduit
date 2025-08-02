@@ -1,4 +1,4 @@
-.PHONY: up down build restart prune create-topics get-topics register-connector
+.PHONY: up down build restart prune create-topics get-topics register-connector delete-topics
 
 up: docker-up create-topics register-connector
 

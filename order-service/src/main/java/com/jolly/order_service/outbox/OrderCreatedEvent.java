@@ -28,7 +28,7 @@ public class OrderCreatedEvent implements ExportedEvent {
 
   public static OrderCreatedEvent of(PurchaseOrder order) {
     ObjectNode asJson = mapper.createObjectNode()
-        .put("id", order.getId())
+        .put("orderId", order.getId())
         .put("customerId", order.getCustomerId())
         .put("orderDate", order.getOrderDate().toString());
 
