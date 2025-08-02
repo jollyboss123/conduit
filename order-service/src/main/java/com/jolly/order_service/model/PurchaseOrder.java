@@ -25,7 +25,7 @@ public class PurchaseOrder {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchase_order_ids")
-  @SequenceGenerator(name = "purchase_order_ids", sequenceName = "seq_purchase_order", allocationSize = 50)
+  @SequenceGenerator(name = "purchase_order_ids", sequenceName = "seq_purchase_order")
   private Long id;
 
   private long customerId;

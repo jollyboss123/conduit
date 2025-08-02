@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -28,8 +30,9 @@ public class Outbox {
   @Column(nullable = false)
   private String type;
 
-  @Column(nullable = false)
-  private String payload;
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(nullable = false, columnDefinition = "jsonb")
+  private Object payload;
 
   @Column(updatable = false)
   private Instant timestamp;
