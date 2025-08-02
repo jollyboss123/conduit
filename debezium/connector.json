@@ -1,0 +1,37 @@
+{
+  "name": "outboxevent-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "plugin.name": "pgoutput",
+    "slot.name": "debezium_outboxevent",
+    "name": "outboxevent-source",
+    "publication.name": "public_outboxevent",
+
+    "database.dbname": "orderdb",
+    "database.user": "postgresuser",
+    "database.password": "postgrespw",
+    "database.hostname": "order-db",
+    "database.port": "5432",
+    "schema.include.list": "public",
+    "table.include.list": "public.outboxevent",
+    "topic.prefix": "orders",
+
+    "tombstones.on.delete" : "false",
+
+    "transforms": "unwrap,reroute,extractId,castByte",
+
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.delete.tombstone.handling.mode": "drop",
+
+    "transforms.reroute.type": "io.debezium.transforms.ByLogicalTableRouter",
+    "transforms.reroute.topic.regex": "(.*)",
+    "transforms.reroute.topic.replacement": "orders.private.outbox",
+
+    "transforms.extractId.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.extractId.field": "id",
+
+    "transforms.castByte.type": "org.apache.kafka.connect.transforms.Cast$Value",
+    "transforms.castByte.spec": "id:string"
+  }
+}
