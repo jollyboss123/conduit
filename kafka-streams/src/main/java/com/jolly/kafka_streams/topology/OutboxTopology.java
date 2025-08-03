@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Profile("outbox")
@@ -40,12 +41,11 @@ public class OutboxTopology {
   public void buildTopology(StreamsBuilder streamsBuilder) {
     streamsBuilder.stream("orders.private.outbox", Consumed.with(Serdes.String(), outboxSerde))
         .map((key, value) -> {
-          Outbox.Payload payload;
+          Outbox.Payload payload = null;
           try {
             payload = payloadReader.readValue(value.getPayload());
           } catch (IOException e) {
-            log.warn("Failed to deserialize payload: {}", value.getPayload(), e);
-            return null;
+            log.warn("Failed to deserialize payload: ", e);
           }
 
           return new KeyValue<>(key, NormalizedOutbox.newBuilder()
@@ -55,11 +55,14 @@ public class OutboxTopology {
               .setType(value.getType())
               .setPayload(value.getPayload())
               .setTimestamp(value.getTimestamp())
-              .setOrderId(payload.getOrderId())
-              .setCustomerId(payload.getCustomerId())
+              .setOrderId(Optional.ofNullable(payload)
+                  .map(Outbox.Payload::getOrderId)
+                  .orElse(null))
+              .setCustomerId(Optional.ofNullable(payload)
+                  .map(Outbox.Payload::getCustomerId)
+                  .orElse(null))
               .build());
         })
-        .filter((k, v) -> v != null)
         .to("orders.public.outbox.v1", Produced.with(Serdes.String(), normalizedOutboxSerde));
   }
 }

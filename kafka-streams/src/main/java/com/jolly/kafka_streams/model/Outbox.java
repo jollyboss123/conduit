@@ -26,7 +26,7 @@ public class Outbox {
   String aggregateId;
   String type;
   String payload;
-  Instant timestamp;
+  Long timestamp;
 
   @Value
   @Builder
