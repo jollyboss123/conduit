@@ -40,6 +40,16 @@ public class OutboxTopology {
   @Autowired
   public void buildTopology(StreamsBuilder streamsBuilder) {
     streamsBuilder.stream("orders.private.outbox", Consumed.with(Serdes.String(), outboxSerde))
+        .peek((key, value) -> {
+          if (value == null || value.getPayload() == null ||
+              value.getPayload().contains("debezium_unavailable_value")) {
+            log.warn("Filtered out record with key [{}]: {}", key, value);
+          }
+        })
+        .filter((key, value) ->
+            value != null &&
+                value.getPayload() != null &&
+                !value.getPayload().contains("debezium_unavailable_value"))
         .map((key, value) -> {
           Outbox.Payload payload = null;
           try {
