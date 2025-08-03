@@ -41,6 +41,8 @@
     "value.converter.auto.register.schemas": "false",
     "value.converter.use.latest.version": "false",
     "value.converter.schemas.enable": "false",
-    "value.converter.connect.meta.data": "false"
+    "value.converter.connect.meta.data": "false",
+
+    "snapshot.mode": "no_data"
   }
 }
