@@ -9,7 +9,7 @@ This project implements an **event-driven outbox pattern** using Kafka, Debezium
 - **Polyglot friendly** — consumers only need the Avro schema, not internal DB details.
 
 ## 🏗 Architecture Overview
-<img src="docs/architecture.png">
+<img src="docs/architecture.png" width="500">
 
 - **Debezium** monitors changes in the outbox table (`outboxevent`) via logical decoding.
 - **Kafka Streams** normalizes and transforms the private JSON-based stream to a public Avro-based stream.
