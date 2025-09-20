@@ -1,40 +1,15 @@
-# Distributed Outbox Event Streaming Architecture
+# Conduit
 
 This project implements an **event-driven outbox pattern** using Kafka, Debezium, Kafka Streams, and Schema Registry to propagate state changes from a PostgreSQL-based microservice into a shared, normalized event stream that can be consumed by downstream services (e.g., shipment service, S3 sinks, etc.).
 
-
+## ✨ Why Conduit?
+- **Decouple producers from consumers** — expose a stable, versioned public contract.
+- **Normalize change events** — transform raw CDC JSON into Avro records.
+- **Guarantee compatibility** — enforce schemas via Confluent Schema Registry.
+- **Polyglot friendly** — consumers only need the Avro schema, not internal DB details.
 
 ## 🏗 Architecture Overview
-```
-          ┌────────────────────┐
-          │  PostgreSQL (DB)   │
-          │  ── Outbox Table   │
-          └────────┬───────────┘
-                   │
-                   ▼
-        ┌──────────────────────┐
-        │     Debezium         │
-        │ Postgres Connector   │
-        └────────┬─────────────┘
-                 │
-                 ▼
-      Kafka Topic: orders.private.outbox
-                 │
-         ┌───────┴────────┐
-         │ Kafka Streams  │
-         │      App       │
-         └───────┬────────┘
-                 │
-                 ▼
-      Kafka Topic: orders.public.outbox.v1
-                 │
-         ┌───────┼────────┐
-         │       │        │
-         ▼       ▼        ▼
-  Shipment  S3 Sink   Other Services
-   Service   (via     (Optional fan-out)
-  (Consumer) Connector)
-```
+<img src="docs/architecture.png">
 
 - **Debezium** monitors changes in the outbox table (`outboxevent`) via logical decoding.
 - **Kafka Streams** normalizes and transforms the private JSON-based stream to a public Avro-based stream.
